@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-cockpit',
@@ -7,10 +7,11 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class CockpitComponent implements OnInit {
   @Output() serverCreated = new EventEmitter<{serverName: string, serverContent: string}>();
-  @Output() bluePrintCreated = new EventEmitter<{serverName: string, serverContent: string}>();
-  newServerName = '';
-  newServerContent = '';
-
+  @Output('bpCreated') bluePrintCreated = new EventEmitter<{serverName: string, serverContent: string}>();
+  // newServerName = '';
+  // newServerContent = '';
+  //make Element with localRef accessible in the template -- instead of localref, can use type name to access first instance of xx component
+  @ViewChild('serverContentInput') serverContentInput: ElementRef;
 
 
   constructor() { }
@@ -18,17 +19,19 @@ export class CockpitComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onAddServer() {
+  onAddServer(serverNameInput: HTMLInputElement) {
+    console.log(serverNameInput);
+    console.log(this.serverContentInput)
     this.serverCreated.emit({ 
-      serverName: this.newServerName, 
-      serverContent: this.newServerContent
+      serverName: serverNameInput.value, 
+      serverContent: this.serverContentInput.nativeElement.value
     });
   }
 
-  onAddBlueprint() {
+  onAddBlueprint(serverNameInput: HTMLInputElement) {
     this.bluePrintCreated.emit({ 
-      serverName: this.newServerName, 
-      serverContent: this.newServerContent
+      serverName: serverNameInput.value,
+      serverContent: this.serverContentInput.nativeElement.value
     });
   }
 }
